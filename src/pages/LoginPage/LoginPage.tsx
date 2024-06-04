@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {
 	getAuth,
@@ -9,10 +9,12 @@ import {
 import {toast} from 'react-toastify';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {Inputs} from './type';
-import googleIcon from 'assets/icon/googleIcon.svg';
+import googleIcon from 'assets/icons/googleIcon.svg';
 import {provider} from 'services/firebaseConfig';
 import {useAppDispatch} from 'hooks/reduxHooks';
 import {UserActions} from 'store/slices/UserSlice';
+import eyeIcon from 'assets/icons/eyeIcon.svg';
+import closedEyeIcon from 'assets/icons/closedEyeIcon.svg';
 
 import styles from './LoginPage.module.scss';
 
@@ -25,6 +27,7 @@ const LoginPage: FC = () => {
 	} = useForm<Inputs>();
 	const dispatch = useAppDispatch();
 	const auth = getAuth();
+	const [isPasswordVisible, setPasswordVisible] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 
 	const authorize: SubmitHandler<Inputs> = async (data) => {
@@ -82,41 +85,63 @@ const LoginPage: FC = () => {
 					<form
 						className={styles.formContainer}
 						onSubmit={handleSubmit(authorize)}>
-						<label>Email</label>
-						<input
-							{...register('email', {
-								required: {
-									value: true,
-									message: 'Password field must be filled',
-								},
-							})}
-							className={
-								errors.email ? styles.errorInput : styles.input
-							}
-							type="email"
-							placeholder="your@mail.com"
-						/>
-						{errors.email && (
-							<p className={styles.errorMessage}>
-								{errors.email.message}
-							</p>
-						)}
-						<label>Password</label>
-						<input
-							{...register('password', {
-								required: {
-									value: true,
-									message: 'Password field must be filled',
-								},
-							})}
-							className={
-								errors.password
-									? styles.errorInput
-									: styles.input
-							}
-							type="password"
-							placeholder="Enter your password"
-						/>
+						<div>
+							<label>Email</label>
+							<input
+								{...register('email', {
+									required: {
+										value: true,
+										message: 'Email field is required',
+									},
+								})}
+								className={
+									errors.email
+										? styles.errorInput
+										: styles.input
+								}
+								type="email"
+								placeholder="your@mail.com"
+							/>
+							{errors.email && (
+								<p className={styles.errorMessage}>
+									{errors.email.message}
+								</p>
+							)}
+						</div>
+						<div>
+							<label>Password</label>
+							<div className={styles.passwordContainer}>
+								<input
+									{...register('password', {
+										required: {
+											value: true,
+											message:
+												'Password field must be filled',
+										},
+									})}
+									className={
+										errors.password
+											? styles.errorInput
+											: styles.input
+									}
+									type={
+										isPasswordVisible ? 'text' : 'password'
+									}
+									placeholder="Enter your password"
+								/>
+								<img
+									onClick={() =>
+										setPasswordVisible(!isPasswordVisible)
+									}
+									src={
+										isPasswordVisible
+											? closedEyeIcon
+											: eyeIcon
+									}
+									alt=""
+								/>
+							</div>
+						</div>
 						<button
 							disabled={!!errors.email || !!errors.password}
 							className={styles.submitButton}
@@ -131,7 +156,7 @@ const LoginPage: FC = () => {
 
 					<p className={styles.navigationLink}>
 						Don't have an account?
-						<Link to="/signup">Sign up</Link>
+						<Link to="/sign-up">Sign up</Link>
 					</p>
 
 					<div className={styles.servicesContainer}>

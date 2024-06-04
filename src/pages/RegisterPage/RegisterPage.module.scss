@@ -63,11 +63,7 @@
 .formContainer {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-
-	& > div:last-of-type {
-		margin-top: 10px;
-	}
+	gap: 15px;
 }
 
 .input {
@@ -87,8 +83,24 @@
 
 .errorMessage {
 	position: absolute;
-	font-size: 12px;
 	bottom: -20%;
+	right: 0;
+	font-size: 12px;
+}
+
+.passwordContainer {
+	position: relative;
+
+	& > img {
+		cursor: pointer;
+		position: absolute;
+		right: 15px;
+		top: 0;
+		bottom: 0;
+		width: 24px;
+		height: 24px;
+		margin: auto 0;
+	}
 }
 
 .submitButton {

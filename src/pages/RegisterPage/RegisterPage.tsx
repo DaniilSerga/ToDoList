@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {
 	getAuth,
@@ -9,10 +9,12 @@ import {
 import {toast} from 'react-toastify';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {Inputs} from './type';
-import googleIcon from 'assets/icon/googleIcon.svg';
+import googleIcon from 'assets/icons/googleIcon.svg';
 import {provider} from 'services/firebaseConfig';
 import {useAppDispatch} from 'hooks/reduxHooks';
 import {UserActions} from 'store/slices/UserSlice';
+import eyeIcon from 'assets/icons/eyeIcon.svg';
+import closedEyeIcon from 'assets/icons/closedEyeIcon.svg';
 
 import styles from './RegisterPage.module.scss';
 
@@ -25,6 +27,8 @@ const RegisterPage: FC = () => {
 	} = useForm<Inputs>();
 	const dispatch = useAppDispatch();
 	const auth = getAuth();
+	const [isPasswordVisible, setPasswordVisible] = useState(false);
+	const [isRepeatPasswordVisible, setRepeatPasswordVisible] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 
 	const authorize: SubmitHandler<Inputs> = async (data) => {
@@ -41,6 +45,7 @@ const RegisterPage: FC = () => {
 			})
 			.catch((error) => {
 				console.error(error.message);
+				toast.error('Invalid data');
 			})
 			.finally(() => {
 				setLoading(false);
@@ -61,6 +66,7 @@ const RegisterPage: FC = () => {
 			})
 			.catch((error) => {
 				console.error(error.message);
+				toast.error('Invalid data');
 			})
 			.finally(() => {
 				setLoading(false);
@@ -85,10 +91,9 @@ const RegisterPage: FC = () => {
 							<label>Email</label>
 							<input
 								{...register('email', {
-									required: true,
-									pattern: {
-										value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-										message: 'err',
+									required: {
+										value: true,
+										message: 'Email field is required',
 									},
 								})}
 								className={
@@ -107,31 +112,98 @@ const RegisterPage: FC = () => {
 						</div>
 						<div className={styles.inputContainer}>
 							<label>Password</label>
-							<input
-								{...register('password', {
-									required: true,
-									minLength: {
-										value: 6,
-										message:
-											'Password length must be greater than 6',
-									},
-								})}
-								className={
-									errors.password
-										? styles.errorInput
-										: styles.input
-								}
-								type="password"
-								placeholder="Enter your password"
-							/>
+							<div className={styles.passwordContainer}>
+								<input
+									{...register('password', {
+										required: true,
+										minLength: {
+											value: 6,
+											message:
+												'Password length must be greater than 6',
+										},
+									})}
+									className={
+										errors.password
+											? styles.errorInput
+											: styles.input
+									}
+									type={
+										isPasswordVisible ? 'text' : 'password'
+									}
+									placeholder="Enter your password"
+								/>
+								<img
+									onClick={() =>
+										setPasswordVisible(!isPasswordVisible)
+									}
+									src={
+										isPasswordVisible
+											? closedEyeIcon
+											: eyeIcon
+									}
+									alt=""
+								/>
+							</div>
 							{errors.password && (
 								<p className={styles.errorMessage}>
 									{errors.password.message}
 								</p>
 							)}
 						</div>
+						<div className={styles.inputContainer}>
+							<label>Repeat your password</label>
+							<div className={styles.passwordContainer}>
+								<input
+									{...register('repeatPassword', {
+										required: true,
+										validate: {
+											isEqual: (repeatedPassword) => {
+												return (
+													repeatedPassword ===
+														watch('password') ||
+													'Passwords must be the same'
+												);
+											},
+										},
+									})}
+									className={
+										errors.repeatPassword
+											? styles.errorInput
+											: styles.input
+									}
+									type={
+										isRepeatPasswordVisible
+											? 'text'
+											: 'password'
+									}
+									placeholder="Repeat your password"
+								/>
+								<img
+									onClick={() =>
+										setRepeatPasswordVisible(
+											!isRepeatPasswordVisible,
+										)
+									}
+									src={
+										isRepeatPasswordVisible
+											? closedEyeIcon
+											: eyeIcon
+									}
+									alt=""
+								/>
+							</div>
+							{errors.repeatPassword && (
+								<p className={styles.errorMessage}>
+									{errors.repeatPassword.message}
+								</p>
+							)}
+						</div>
 						<button
-							disabled={!!errors.email || !!errors.password}
+							disabled={
+								!!errors.email ||
+								!!errors.password ||
+								!!errors.repeatPassword
+							}
 							className={styles.submitButton}
 							type="submit">
 							{isLoading ? (
@@ -144,7 +216,7 @@ const RegisterPage: FC = () => {
 
 					<p className={styles.navigationLink}>
 						Already have an account?
-						<Link to="/signin">Sign in</Link>
+						<Link to="/sign-in">Sign in</Link>
 					</p>
 
 					<div className={styles.servicesContainer}>

@@ -5,7 +5,7 @@ const MainPage: FC = () => {
 	return (
 		<div>
 			<h1>main</h1>
-			<Link to="/login">login</Link>
+			<Link to="/sign-in">login</Link>
 		</div>
 	);
 };
