@@ -39,6 +39,7 @@
 	& > h1 {
 		font-size: 36px;
 		font-weight: 700;
+		// text-align: center;
 	}
 
 	& > p {
@@ -49,8 +50,7 @@
 	}
 }
 
-.inputContainer {
-	position: relative;
+.formContainer {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -58,14 +58,8 @@
 	& > label {
 		font-size: 14px;
 	}
-}
 
-.formContainer {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	& > div:last-of-type {
+	& > label:last-of-type {
 		margin-top: 10px;
 	}
 }
@@ -85,12 +79,6 @@
 	border-color: #ff0000;
 }
 
-.errorMessage {
-	position: absolute;
-	font-size: 12px;
-	bottom: -20%;
-}
-
 .submitButton {
 	cursor: pointer;
 	display: grid;
@@ -104,13 +92,8 @@
 	background: $brighGray;
 	transition: background 0.2s;
 
-	&:not(:disabled):hover {
+	&:hover {
 		background: rgba($azureishWhite, 1);
-	}
-
-	&:disabled {
-		cursor: unset;
-		color: rgba($black, 0.2);
 	}
 }
 

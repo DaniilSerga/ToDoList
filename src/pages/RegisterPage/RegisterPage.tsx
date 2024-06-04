@@ -10,10 +10,11 @@ import {toast} from 'react-toastify';
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {Inputs} from './type';
 import googleIcon from 'assets/icon/googleIcon.svg';
-import styles from './RegisterPage.module.scss';
 import {provider} from 'services/firebaseConfig';
 import {useAppDispatch} from 'hooks/reduxHooks';
 import {UserActions} from 'store/slices/UserSlice';
+
+import styles from './RegisterPage.module.scss';
 
 const RegisterPage: FC = () => {
 	const {
@@ -24,8 +25,10 @@ const RegisterPage: FC = () => {
 	} = useForm<Inputs>();
 	const dispatch = useAppDispatch();
 	const auth = getAuth();
+	const [isLoading, setLoading] = useState(false);
 
 	const authorize: SubmitHandler<Inputs> = async (data) => {
+		setLoading(true);
 		await createUserWithEmailAndPassword(auth, data.email, data.password)
 			.then(({user}: UserCredential) => {
 				dispatch(
@@ -37,11 +40,15 @@ const RegisterPage: FC = () => {
 				);
 			})
 			.catch((error) => {
-				toast.error(error.message);
+				console.error(error.message);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	};
 
 	const authorizeGoogle = async () => {
+		setLoading(true);
 		await signInWithPopup(auth, provider)
 			.then(({user}: UserCredential) => {
 				dispatch(
@@ -53,15 +60,12 @@ const RegisterPage: FC = () => {
 				);
 			})
 			.catch((error) => {
-				toast.error(error.message);
+				console.error(error.message);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	};
-
-	useEffect(() => {
-		if (errors.password && errors.password.type === 'minLength') {
-			toast.error('Password length must be greater than 5');
-		}
-	}, [errors]);
 
 	return (
 		<div className={styles.pageWrapper}>
@@ -77,37 +81,70 @@ const RegisterPage: FC = () => {
 					<form
 						className={styles.formContainer}
 						onSubmit={handleSubmit(authorize)}>
-						<label>Email</label>
-						<input
-							{...register('email', {required: true})}
-							className={
-								errors.email ? styles.errorInput : styles.input
-							}
-							type="email"
-							placeholder="your@mail.com"
-						/>
-						<label>Password</label>
-						<input
-							{...register('password', {
-								required: true,
-								minLength: 5,
-							})}
-							className={
-								errors.password
-									? styles.errorInput
-									: styles.input
-							}
-							type="password"
-							placeholder="Enter your password"
-						/>
-						<button className={styles.submitButton} type="submit">
-							Create an account
+						<div className={styles.inputContainer}>
+							<label>Email</label>
+							<input
+								{...register('email', {
+									required: true,
+									pattern: {
+										value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+										message: 'err',
+									},
+								})}
+								className={
+									errors.email
+										? styles.errorInput
+										: styles.input
+								}
+								type="email"
+								placeholder="your@mail.com"
+							/>
+							{errors.email && (
+								<p className={styles.errorMessage}>
+									{errors.email.message}
+								</p>
+							)}
+						</div>
+						<div className={styles.inputContainer}>
+							<label>Password</label>
+							<input
+								{...register('password', {
+									required: true,
+									minLength: {
+										value: 6,
+										message:
+											'Password length must be greater than 6',
+									},
+								})}
+								className={
+									errors.password
+										? styles.errorInput
+										: styles.input
+								}
+								type="password"
+								placeholder="Enter your password"
+							/>
+							{errors.password && (
+								<p className={styles.errorMessage}>
+									{errors.password.message}
+								</p>
+							)}
+						</div>
+						<button
+							disabled={!!errors.email || !!errors.password}
+							className={styles.submitButton}
+							type="submit">
+							{isLoading ? (
+								<div className={styles.loader}></div>
+							) : (
+								'Create an account'
+							)}
 						</button>
 					</form>
 
 					<p className={styles.navigationLink}>
 						Already have an account?
-						<Link to="/login">Sign in</Link>
+						<Link to="/signin">Sign in</Link>
 					</p>
 
 					<div className={styles.servicesContainer}>
