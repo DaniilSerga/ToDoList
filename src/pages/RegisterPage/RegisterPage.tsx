@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {
 	getAuth,
@@ -17,6 +17,7 @@ import eyeIcon from 'assets/icons/eyeIcon.svg';
 import closedEyeIcon from 'assets/icons/closedEyeIcon.svg';
 
 import styles from './RegisterPage.module.scss';
+import {STORAGE_KEYS} from 'constants/storageKeys';
 
 const RegisterPage: FC = () => {
 	const {
@@ -72,6 +73,12 @@ const RegisterPage: FC = () => {
 				setLoading(false);
 			});
 	};
+
+	useEffect(() => {
+		if (localStorage.getItem(STORAGE_KEYS.TOKEN)) {
+			dispatch(UserActions.removeUser());
+		}
+	}, []);
 
 	return (
 		<div className={styles.pageWrapper}>

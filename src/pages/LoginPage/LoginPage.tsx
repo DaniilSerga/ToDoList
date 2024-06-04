@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {
 	getAuth,
@@ -17,6 +17,7 @@ import eyeIcon from 'assets/icons/eyeIcon.svg';
 import closedEyeIcon from 'assets/icons/closedEyeIcon.svg';
 
 import styles from './LoginPage.module.scss';
+import {STORAGE_KEYS} from 'constants/storageKeys';
 
 const LoginPage: FC = () => {
 	const {
@@ -70,6 +71,12 @@ const LoginPage: FC = () => {
 				setLoading(false);
 			});
 	};
+
+	useEffect(() => {
+		if (localStorage.getItem(STORAGE_KEYS.TOKEN)) {
+			dispatch(UserActions.removeUser());
+		}
+	}, []);
 
 	return (
 		<div className={styles.pageWrapper}>
@@ -143,7 +150,9 @@ const LoginPage: FC = () => {
 							</div>
 						</div>
 						<button
-							disabled={!!errors.email || !!errors.password}
+							disabled={
+								isLoading || !!errors.email || !!errors.password
+							}
 							className={styles.submitButton}
 							type="submit">
 							{isLoading ? (

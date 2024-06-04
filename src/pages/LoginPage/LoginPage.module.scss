@@ -109,8 +109,13 @@
 	background: $brighGray;
 	transition: background 0.2s;
 
-	&:hover {
+	&:not(:disabled):hover {
 		background: rgba($azureishWhite, 1);
+	}
+
+	&:disabled {
+		cursor: unset;
+		color: rgba($black, 0.2);
 	}
 }
 
