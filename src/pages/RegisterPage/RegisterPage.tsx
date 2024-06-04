@@ -28,7 +28,6 @@ const RegisterPage: FC = () => {
 	const authorize: SubmitHandler<Inputs> = async (data) => {
 		await createUserWithEmailAndPassword(auth, data.email, data.password)
 			.then(({user}: UserCredential) => {
-				console.log(user);
 				dispatch(
 					UserActions.setUser({
 						email: user.email,
