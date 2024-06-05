@@ -7,30 +7,25 @@ beforeAll(async () => {
 	global.TextDecoder = require('util').TextDecoder;
 });
 
-describe('LoginPage tests', () => {
-	test('page is rendered', () => {
+describe('Login page tests', () => {
+	test('It should render Login page', () => {
 		const {getByText} = renderWithProviders(<LoginPage />);
 		const title = getByText(/Sign in/i);
 		expect(title).toBeInTheDocument();
 	});
 
-	test('errors are being displayed', async () => {
-		const {getByText, getByRole} = renderWithProviders(<LoginPage />);
+	test('It should display errors when input are empty', async () => {
+		const {getByText} = renderWithProviders(<LoginPage />);
+		const submitButton = getByText('Login');
 
-		act(async () => {
-			const submitButton = getByRole('button', {name: 'Login'});
+		fireEvent.click(submitButton);
 
-			fireEvent.click(submitButton);
+		await waitFor(() => {
+			expect(
+				getByText('Password field must be filled'),
+			).toBeInTheDocument();
 
-			await waitFor(() => {
-				expect(
-					getByText(/Password field must be filled/i),
-				).toBeInTheDocument();
-
-				expect(
-					getByText(/'Email field is required'/i),
-				).toBeInTheDocument();
-			});
+			expect(getByText('Email field is required')).toBeInTheDocument();
 		});
 	});
 });
