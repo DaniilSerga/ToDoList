@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import {toast} from 'react-toastify';
 import {SubmitHandler, useForm} from 'react-hook-form';
-import {Inputs} from './type';
+import {Inputs} from './RegisterPage.type';
 import googleIcon from 'assets/icons/googleIcon.svg';
 import {provider} from 'services/firebaseConfig';
 import {useAppDispatch} from 'hooks/reduxHooks';
