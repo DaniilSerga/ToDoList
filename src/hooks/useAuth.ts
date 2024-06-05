@@ -10,8 +10,6 @@ export const useAuth = () => {
 		setAuth(!!localStorage.getItem(STORAGE_KEYS.TOKEN));
 	}, [email, token, id]);
 
-	// console.log(isAuth);
-
 	return {
 		isAuth,
 		email,

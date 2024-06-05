@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import {toast} from 'react-toastify';
 import {SubmitHandler, useForm} from 'react-hook-form';
-import {Inputs} from './type';
+import {Inputs} from './LoginPage.type';
 import googleIcon from 'assets/icons/googleIcon.svg';
 import {provider} from 'services/firebaseConfig';
 import {useAppDispatch} from 'hooks/reduxHooks';
@@ -92,7 +92,7 @@ const LoginPage: FC = () => {
 					<form
 						className={styles.formContainer}
 						onSubmit={handleSubmit(authorize)}>
-						<div>
+						<div className={styles.inputContainer}>
 							<label>Email</label>
 							<input
 								{...register('email', {
@@ -115,7 +115,7 @@ const LoginPage: FC = () => {
 								</p>
 							)}
 						</div>
-						<div>
+						<div className={styles.inputContainer}>
 							<label>Password</label>
 							<div className={styles.passwordContainer}>
 								<input
@@ -148,6 +148,11 @@ const LoginPage: FC = () => {
 									alt=""
 								/>
 							</div>
+							{errors.password && (
+								<p className={styles.errorMessage}>
+									{errors.password.message}
+								</p>
+							)}
 						</div>
 						<button
 							disabled={

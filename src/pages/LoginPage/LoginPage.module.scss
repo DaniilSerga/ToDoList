@@ -39,7 +39,6 @@
 	& > h1 {
 		font-size: 36px;
 		font-weight: 700;
-		// text-align: center;
 	}
 
 	& > p {
@@ -50,6 +49,16 @@
 	}
 }
 
+.inputContainer {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	& > label {
+		font-size: 14px;
+	}
+}
 .formContainer {
 	display: flex;
 	flex-direction: column;
@@ -79,6 +88,13 @@
 .errorInput {
 	@extend .input;
 	border-color: #ff0000;
+}
+
+.errorMessage {
+	position: absolute;
+	bottom: -20%;
+	right: 0;
+	font-size: 12px;
 }
 
 .passwordContainer {

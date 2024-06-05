@@ -122,7 +122,11 @@ const RegisterPage: FC = () => {
 							<div className={styles.passwordContainer}>
 								<input
 									{...register('password', {
-										required: true,
+										required: {
+											value: true,
+											message:
+												'Password field is required',
+										},
 										minLength: {
 											value: 6,
 											message:
