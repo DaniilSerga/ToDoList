@@ -1,0 +1,17 @@
+@import 'styles/colors';
+
+.container {
+	width: 90px;
+	background-color: $darkJungleGreen;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	padding: 24px 0 34px;
+}
+
+.logoutButton {
+	cursor: pointer;
+	color: $white;
+	background-color: transparent;
+	border: none;
+}

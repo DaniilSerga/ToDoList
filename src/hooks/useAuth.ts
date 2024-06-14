@@ -3,7 +3,9 @@ import {useAppSelector} from './reduxHooks';
 import {useEffect, useState} from 'react';
 
 export const useAuth = () => {
-	const [isAuth, setAuth] = useState(false);
+	const [isAuth, setAuth] = useState(
+		!!localStorage.getItem(STORAGE_KEYS.TOKEN),
+	);
 	const {email, token, id} = useAppSelector((state) => state.user);
 
 	useEffect(() => {

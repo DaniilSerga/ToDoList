@@ -2,18 +2,22 @@ import {useAppDispatch} from 'hooks/reduxHooks';
 import React, {FC} from 'react';
 import {Link} from 'react-router-dom';
 import {UserActions} from 'store/slices/UserSlice';
+import AdbIcon from '@mui/icons-material/Adb';
+import {Navbar} from 'components';
+
+import styles from './MainPage.module.scss';
+import {Sidebar} from 'components/Sidebar';
 
 const MainPage: FC = () => {
-	const dispatch = useAppDispatch();
-
-	const logout = () => {
-		dispatch(UserActions.removeUser());
-	};
-
 	return (
-		<div>
-			<h1>main</h1>
-			<button onClick={logout}>Выйти</button>
+		<div className={styles.container}>
+			<Sidebar />
+
+			<Navbar />
+
+			<div>
+				<h1>main</h1>
+			</div>
 		</div>
 	);
 };
